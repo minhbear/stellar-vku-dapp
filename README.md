@@ -82,9 +82,9 @@ docker build -f apps/sharebill/Dockerfile -t sharebill .
 docker build -f apps/escrow/Dockerfile -t escrow .
 ```
 
-Trên Railway, tạo hai service trỏ vào cùng repo này, mỗi service dùng file cấu
-hình `apps/<tên app>/railway.json`, cộng một service MongoDB. Biến môi trường
-duy nhất bắt buộc khi chạy là:
+Trên Railway, tạo hai service trỏ vào cùng repo này, mỗi service đặt Dockerfile
+Path là `apps/<tên app>/Dockerfile`, cộng một service MongoDB. Các bước đầy đủ
+nằm trong `docs/deploy.md`. Biến môi trường duy nhất bắt buộc khi chạy là:
 
 ```
 MONGODB_URI=<chuỗi kết nối Mongo>

@@ -1,43 +1,62 @@
 # Deploy
 
-Mọi thứ cần để đưa hai app lên mạng. Hợp đồng đã nằm sẵn trên testnet nên phần
-này chỉ còn là deploy hai web app và một database.
+Hợp đồng đã nằm sẵn trên testnet (xem `deploy/testnet.json`), nên phần này chỉ
+còn là deploy hai web app và một database.
 
-## Cách 1: Railway cho tất cả (khuyên dùng)
+## Bản đang chạy
 
-Một project Railway, ba service, dùng chung mạng nội bộ.
+| Thành phần | Nơi chạy |
+| --- | --- |
+| Share Bill | https://sharebill-production.up.railway.app |
+| Chốt Job | https://escrow-production-6fd3.up.railway.app |
+| MongoDB | service `MongoDB` trong cùng project Railway |
+
+Project Railway: `stellar-vku-dapp`, environment `production`, cả ba service đặt
+ở region `europe-west4` để app và database nói chuyện qua mạng nội bộ.
+
+## Cách 1: Railway cho tất cả (đang dùng)
+
+Một project, ba service, dùng chung mạng nội bộ.
 
 ### 1. MongoDB
 
-New → Database → **Add MongoDB**. Railway tự tạo biến `MONGO_URL` trong service
-đó. Copy giá trị này.
+New → Database → **Add MongoDB**. Railway tự sinh mật khẩu và tạo biến
+`MONGO_URL` trong service đó. Không cần sửa gì.
 
-### 2. Service `sharebill`
+### 2. Hai service web
+
+Mỗi app một service, cùng trỏ về repo `minhbear/stellar-vku-dapp` branch `main`:
 
 - New → GitHub Repo → `minhbear/stellar-vku-dapp`
-- Settings → Config-as-code → **`apps/sharebill/railway.json`**
-- Root Directory để nguyên `/` (Dockerfile build từ gốc repo vì đây là monorepo)
+- Settings → Build → **Dockerfile Path**: `apps/sharebill/Dockerfile`
+  (service kia dùng `apps/escrow/Dockerfile`)
+- Root Directory để nguyên `/`: Dockerfile build từ gốc repo vì đây là monorepo
+- Settings → Build → **Watch Paths**, để push vào app này không build lại app kia:
+  ```
+  apps/sharebill/**
+  packages/**
+  package.json
+  package-lock.json
+  ```
 - Variables:
   ```
   MONGODB_URI=${{MongoDB.MONGO_URL}}
   MONGODB_DB=vku_sharebill
   ```
-- Settings → Networking → **Generate Domain**
+  Service escrow dùng `MONGODB_DB=vku_escrow`. Hai app hai database riêng.
+- Settings → Networking → **Generate Domain**, target port `3000`
 
-### 3. Service `escrow`
+> Đừng dùng `railway.json` hay `railway.toml`. Railway đã bỏ Config as Code và
+> service mới không bật được nữa; cấu hình build đặt thẳng trong Settings của
+> service, hoặc viết `.railway/railway.ts` nếu muốn Infrastructure as Code.
 
-Giống hệt, chỉ khác:
-
-- Config-as-code: **`apps/escrow/railway.json`**
-- `MONGODB_DB=vku_escrow`
-
-### 4. Nối ngược về trang khoá học
+### 3. Nối ngược về trang khoá học
 
 Trong repo `stellar-vku`, đặt hai biến môi trường rồi deploy lại:
 
 ```
-NEXT_PUBLIC_SHAREBILL_URL=https://<domain sharebill>
-NEXT_PUBLIC_ESCROW_URL=https://<domain escrow>
+NEXT_PUBLIC_SHAREBILL_URL=https://sharebill-production.up.railway.app
+NEXT_PUBLIC_ESCROW_URL=https://escrow-production-6fd3.up.railway.app
 ```
 
 Hai nút trong chuyên đề 4 sẽ tự chuyển từ "Sắp có đường dẫn" thành link thật.
