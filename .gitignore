@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+dist/
+.turbo/
+target/
+*.tsbuildinfo
+.env
+.env.local
+.env*.local
+.DS_Store
+contracts/target/

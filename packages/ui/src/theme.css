@@ -1,0 +1,141 @@
+/* Design tokens for both dapps. An app overrides --accent to get its own
+   colour; everything else stays identical so the two feel like one family. */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+
+  --color-fg: var(--fg);
+  --color-fg-soft: var(--fg-soft);
+  --color-fg-faint: var(--fg-faint);
+
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+
+  /* On chain is the accent, off chain is deliberately colourless: the UI
+     should make it obvious which half of the app you are looking at. */
+  --color-chain: var(--accent);
+  --color-off: var(--off);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --radius-card: 1.125rem;
+}
+
+:root {
+  --bg: oklch(0.145 0.012 265);
+  --surface: oklch(0.198 0.015 265);
+  --surface-2: oklch(0.247 0.018 265);
+  --line: oklch(0.305 0.02 265);
+  --line-soft: oklch(0.26 0.018 265);
+
+  --fg: oklch(0.975 0.004 265);
+  --fg-soft: oklch(0.775 0.015 265);
+  --fg-faint: oklch(0.615 0.016 265);
+
+  --accent: oklch(0.76 0.15 168);
+  --accent-fg: oklch(0.16 0.03 168);
+  --accent-soft: oklch(0.76 0.15 168 / 0.15);
+
+  --ok: oklch(0.775 0.16 152);
+  --warn: oklch(0.82 0.15 82);
+  --danger: oklch(0.68 0.2 22);
+  --off: oklch(0.68 0.025 265);
+
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+    /* Two soft lights behind the page so flat cards get some depth. */
+    background-image:
+      radial-gradient(60rem 40rem at 12% -10%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 70%),
+      radial-gradient(50rem 36rem at 92% 0%, oklch(0.55 0.14 285 / 0.1), transparent 70%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background-color: var(--accent-soft);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+}
+
+@utility card-shadow {
+  box-shadow:
+    0 1px 0 0 oklch(1 0 0 / 0.04) inset,
+    0 12px 32px -18px oklch(0 0 0 / 0.7);
+}
+
+/* Entrances are CSS, never JS: a background tab pauses requestAnimationFrame
+   and a JS entrance would leave the page stuck at opacity 0. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-rise {
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-soft);
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@utility pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

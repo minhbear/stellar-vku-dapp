@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "@vku/ui/theme.css";
+
+@source "../../../../packages/ui/src";
+@source "../../../../packages/stellar/src";
+
+/* Escrow is violet: a contract between two people, not a shared jar. */
+:root {
+  --accent: oklch(0.72 0.16 292);
+  --accent-fg: oklch(0.16 0.04 292);
+  --accent-soft: oklch(0.72 0.16 292 / 0.17);
+}

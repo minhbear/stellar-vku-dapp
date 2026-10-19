@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "@vku/ui/theme.css";
+
+/* Tailwind only scans files it is told about, and the shared components live
+   outside this app. */
+@source "../../../../packages/ui/src";
+@source "../../../../packages/stellar/src";
+
+/* The travel pot is green: money going into a shared jar. */
+:root {
+  --accent: oklch(0.77 0.15 168);
+  --accent-fg: oklch(0.17 0.04 168);
+  --accent-soft: oklch(0.77 0.15 168 / 0.15);
+}

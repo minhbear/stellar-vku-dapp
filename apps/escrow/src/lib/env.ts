@@ -1,0 +1,8 @@
+export const CONTRACT_ID =
+  process.env.NEXT_PUBLIC_CONTRACT_ID ??
+  "CDZQM46W3OLZNYU64OGJFX2VAADW3DS3TZC5466QYFMAOFJARRSR3TKZ";
+
+/** Offered as the default referee so a demo job can be posted in one go. */
+export const DEFAULT_ARBITER =
+  process.env.NEXT_PUBLIC_DEFAULT_ARBITER ??
+  "GCUAKE3Y445GM25YXKBYCROT5K5HDV2UEQYLABANAZVBKBRYAAQFKFZV";
