@@ -42,9 +42,14 @@ Mỗi app một service, cùng trỏ về repo `minhbear/stellar-vku-dapp` branc
   ```
   MONGODB_URI=${{MongoDB.MONGO_URL}}
   MONGODB_DB=vku_sharebill
+  PORT=3000
   ```
   Service escrow dùng `MONGODB_DB=vku_escrow`. Hai app hai database riêng.
 - Settings → Networking → **Generate Domain**, target port `3000`
+
+`PORT=3000` là bắt buộc. Railway tự tiêm `PORT=8080` và biến đó ghi đè
+`ENV PORT=3000` trong Dockerfile, nên Next sẽ nghe cổng 8080 trong khi domain
+trỏ sang 3000: deploy báo thành công nhưng mở link ra là 502.
 
 > Đừng dùng `railway.json` hay `railway.toml`. Railway đã bỏ Config as Code và
 > service mới không bật được nữa; cấu hình build đặt thẳng trong Settings của
@@ -79,6 +84,7 @@ Vercel tự nhận Next.js nên không cần Dockerfile ở cách này.
 | --- | --- | --- |
 | `MONGODB_URI` | có | không có |
 | `MONGODB_DB` | nên đặt | `vku_sharebill` hoặc `vku_escrow` |
+| `PORT` | có, trên Railway | `3000` trong Dockerfile, nhưng Railway ghi đè thành 8080 |
 | `NEXT_PUBLIC_CONTRACT_ID` | không | địa chỉ hợp đồng hiện tại, nằm sẵn trong mã nguồn |
 | `NEXT_PUBLIC_RPC_URL` | không | `https://soroban-testnet.stellar.org` |
 | `NEXT_PUBLIC_TOKEN_ID` | không | SAC của XLM trên testnet |
